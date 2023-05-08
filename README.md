@@ -1,1 +1,1 @@
-# checker
+# equation solver
