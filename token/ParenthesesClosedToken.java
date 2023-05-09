@@ -1,6 +1,6 @@
 package token;
 
-public class ParenthesesClosedToken extends Token {
+public final class ParenthesesClosedToken extends Token {
     ParenthesesClosedToken() {
         super(TokenType.PARENTHESES_CLOSE);
     }

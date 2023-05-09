@@ -1,7 +1,9 @@
 package token;
 
+import operator.*;
+
 public final class OperatorToken extends Token {
-    private static char[] ALLOWED_OPERATORS = {'+', '-', '*', '/', '=', '^'};
+    private static char[] ALLOWED_OPERATORS = {'+', '-', '*', '/'};
     private char operator;
 
     public OperatorToken(char op) {
@@ -12,8 +14,19 @@ public final class OperatorToken extends Token {
         this.operator = op;
     }
 
-    public char getOperator() {
-        return operator;
+    public Operator getOperator() {
+        switch (operator) {
+            case '+':
+                return new AdditionOperator();
+            case '-':
+                return new SubtractionOperator();
+            case '*':
+                return new MultiplicationOperator();
+            case '/':
+                return new DivisionOperator();
+            default:
+                throw new IllegalArgumentException("Not known Operator found. " + operator);
+        }
     }
 
     public static boolean isAllowedOperatorChar(char ch) {

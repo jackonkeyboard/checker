@@ -2,12 +2,12 @@ package token;
 
 import java.util.*;
 
-public class Tokenizer {
+public final class TokenBuilder {
     private char[] expression;
     private int index = 0;
-    private Token lastToken;
+    private Token prevToken;
 
-    public Tokenizer(String exp) {
+    public TokenBuilder(String exp) {
         this.expression = exp.trim().toCharArray();
     }
 
@@ -18,39 +18,40 @@ public class Tokenizer {
     public Token nextToken() {
         char ch = expression[index];
         while (Character.isWhitespace(ch)) {
-            ch = expression[++index];
+            index++;
+            ch = expression[index];
         }
         if (Character.isDigit(ch) || ch == '.') {
             if (isImplicitMultNeeded()) {
-                lastToken = new OperatorToken('*');
-                return lastToken;
+                prevToken = new OperatorToken('*');
+                return prevToken;
             }
             return parseConstantToken();
-        } else if (ch == '(' || ch == ')') {
-            if (isImplicitMultNeeded()) {
-                lastToken = new OperatorToken('*');
-                return lastToken;
-            }
-            return parseParenthesesToken(ch == '(');
         } else if (OperatorToken.isAllowedOperatorChar(ch)) {
             return parseOperatorToken(ch);
+        } else if (ch == '(' || ch == ')') {
+            if (isImplicitMultNeeded()) {
+                prevToken = new OperatorToken('*');
+                return prevToken;
+            }
+            return parseParenthesesToken();
         } else if (Character.isLetter(ch)) {
             if (isImplicitMultNeeded()) {
-                lastToken = new OperatorToken('*');
-                return lastToken;
+                prevToken = new OperatorToken('*');
+                return prevToken;
             }
             return parseVariableToken(ch);
 
         }
-        throw new IllegalArgumentException("Unable to parse char '" + ch + "' (Code:" + (int) ch + ") at [" + index + "]");
+        throw new IllegalArgumentException("Char '" + ch + "' is not possible to parse");
     }
 
     private boolean isImplicitMultNeeded() {
-        boolean isLastTokenValid = lastToken != null &&
-                (!(lastToken instanceof OperatorToken) &&
-                        !(lastToken instanceof ParenthesesOpenToken));
+        boolean isPrevTokenValid = prevToken != null &&
+                (!(prevToken instanceof OperatorToken) &&
+                        !(prevToken instanceof ParenthesesOpenToken));
         boolean isCurrentokenValid = expression[index] != ')';
-        return isCurrentokenValid && isLastTokenValid;
+        return isCurrentokenValid && isPrevTokenValid;
     }
 
     private Token parseConstantToken() {
@@ -58,7 +59,8 @@ public class Tokenizer {
         char ch = expression[index];
         while ((Character.isDigit(ch) || ch == '.')) {
             index++;
-            if(!hasNext()) break;
+            if (!hasNext())
+                break;
             ch = expression[index];
         }
         String constantS = new String(expression, startIndex, index - startIndex);
@@ -69,33 +71,34 @@ public class Tokenizer {
             throw new Error("Could not retrieve contant");
         }
 
-        lastToken = new ConstantToken(constant);
-        return lastToken;
+        this.prevToken = new ConstantToken(constant);
+        return this.prevToken;
     }
 
-    private Token parseParenthesesToken(boolean isOpen) {
-        if (isOpen) {
-            this.lastToken = new ParenthesesOpenToken();
+    private Token parseParenthesesToken() {
+        char ch = expression[index];
+        if (ch == '(') {
+            this.prevToken = new ParenthesesOpenToken();
         } else {
-            this.lastToken = new ParenthesesClosedToken();
+            this.prevToken = new ParenthesesClosedToken();
         }
         this.index++;
-        return lastToken;
+        return this.prevToken;
     }
 
     private Token parseOperatorToken(char ch) {
-        this.lastToken = new OperatorToken(ch);
+        this.prevToken = new OperatorToken(ch);
         this.index++;
-        return lastToken;
+        return prevToken;
     }
 
     private Token parseVariableToken(char ch) {
-        this.lastToken = new VariableToken(ch);
+        this.prevToken = new VariableToken(ch);
         this.index++;
-        return lastToken;
+        return prevToken;
     }
 
-    public ArrayList<Token> getTokens(){
+    public ArrayList<Token> getTokens() {
         ArrayList<Token> tokens = new ArrayList<Token>();
         while (hasNext()) {
             tokens.add(nextToken());

@@ -1,10 +1,13 @@
 package token;
 
-public class VariableToken extends Token {
-    private final char var;
+import expression.*;
 
-    public char getName() {
-        return var;
+public final class VariableToken extends Token {
+    private char var;
+
+    public FirstOrderExpression getValue() {
+        //init with default coefficients
+        return new FirstOrderExpression(0, 1 , var);
     }
 
     public VariableToken(char var) {

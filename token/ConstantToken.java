@@ -1,15 +1,17 @@
 package token;
 
+import expression.*;
+
 public final class ConstantToken extends Token{
-    private final double value;
+    private double value;
 
     public ConstantToken(double value) {
         super(TokenType.CONSTANT);
         this.value = value;
     }
 
-    public double getValue() {
-        return value;
+    public ConstantExpression getValue() {
+        return new ConstantExpression(value);
     }
 
     @Override
