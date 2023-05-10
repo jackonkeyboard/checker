@@ -19,8 +19,6 @@ public class FirstOrderExpression extends Expression {
 
     @Override
     public String toString() {
-        System.out.println(coefficient1);
-        System.out.println(coefficient2);
         String firstPart = coefficient1 == 0.0 ? "" : coefficient1+"";
         String secondPart = coefficient2 == 0.0 ? "" : coefficient2 == 1 ? " + " + symbol :  " + " + coefficient2 + "" + symbol;
         return firstPart + secondPart;

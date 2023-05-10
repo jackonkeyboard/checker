@@ -9,13 +9,9 @@ import java.util.*;
 public final class ExpressionConstructor {
     private Token[] tokens;
 
-    ExpressionConstructor(Token[] tokens) {
+    public ExpressionConstructor(String expression) {
+        Token[] tokens = Parser.convert(expression);
         this.tokens = tokens;
-    }
-
-    ExpressionConstructor(Token token) {
-        this.tokens = new Token[1];
-        this.tokens[0] = token;
     }
 
     public Expression evaluate() {
@@ -48,8 +44,7 @@ public final class ExpressionConstructor {
     }
 
     public static void main(String[] args) {
-        Token[] tokens = Parser.convert("2(2x+1)+4x(5+1)+9x+(2+2)(x+2x)+9");
-        Expression e = (new ExpressionConstructor(tokens)).evaluate();
+        Expression e = (new ExpressionConstructor("2(2x+1)+4x(5+1)+9x+(2+2)(x+2x)+9")).evaluate();
         System.out.println(e.toString());
     }
 }
