@@ -1,5 +1,5 @@
 package expression;
-import shuntingyard.ShuntingYard;
+import arithmeticParsing.*;
 import token.*;
 import operator.*;
 import token.Token.TokenType;
@@ -48,7 +48,7 @@ public final class ExpressionConstructor {
     }
 
     public static void main(String[] args) {
-        Token[] tokens = ShuntingYard.convert("2(2x+1)+4x(5+1)");
+        Token[] tokens = Parser.convert("2(2x+1)+4x(5+1)+9x+(2+2)(x+2x)+9");
         Expression e = (new ExpressionConstructor(tokens)).evaluate();
         System.out.println(e.toString());
     }
