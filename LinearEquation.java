@@ -1,47 +1,44 @@
-import java.util.*;
+import expression.*;
 
 public class LinearEquation extends Equation {
-    private double a;
-    private double b;
-
     public LinearEquation(String eq) {
         super(eq);
     }
 
     @Override
-    protected Stack<String> parseImp(String equation) {
-        // Simplified parsing logic, assuming a properly formatted equation
-        Stack<String> eqStack = new Stack<>();
-        String[] parts = equation.split(" ");
-        Collections.addAll(eqStack, parts);
-        a = Double.parseDouble(parts[0].split("")[0]);
-        b = Double.parseDouble(parts[2]);
-        return eqStack;
-    }
+    public void displaySolution() {
+        Expression left = getLeftHandSide();
+        Expression rigt = getRightHandSide();
+        Expression simpleForm = left.subtract(rigt);
 
-    @Override
-    public String display() {
-        return a + "x + " + b + " = 0";
-    }
+        if(simpleForm instanceof FirstOrderExpression){
+            double[] coefficients = simpleForm.getValue();
+            double coefficient1 = coefficients[0];
+            double coefficient2 = coefficients[1];
+            //almost zero
+            if(Math.abs(coefficient2) < 2 * Double.MIN_VALUE && Math.abs(coefficient1) < 2 * Double.MIN_VALUE){
+                System.out.println("The equation has infinitely many solutions");
+            }else if(Math.abs(coefficient2) < 2 * Double.MIN_VALUE && Math.abs(coefficient1) > 2 * Double.MIN_VALUE){
+                System.out.println("The equation has no solutions");
+            }else if(Math.abs(coefficient2) > 2 * Double.MIN_VALUE && Math.abs(coefficient1) < 2 * Double.MIN_VALUE){
+                System.out.println("Solution is: 0");
+            }else{
+                System.out.print("Solution is: ");
+                System.out.println(-(coefficient1/coefficient2));
+            }
 
-    @Override
-    public boolean isSolvable() {
-        return a != 0;
-    }
-
-    @Override
-    public ArrayList<Double> solve() {
-        ArrayList<Double> solutions = new ArrayList<>();
-        if (isSolvable()) {
-            solutions.add(-b / a);
+        }else if(simpleForm instanceof ConstantExpression){
+            double value = simpleForm.getValue()[0];
+            if(Math.abs(value) > 2 * Double.MIN_VALUE){
+                System.out.println("The equation does not hold");
+            }else{
+                System.out.println("The equation holds");
+            }
         }
-        return solutions;
     }
 
     public static void main(String[] args) {
-        LinearEquation a = new LinearEquation("7x + 9 = 0");
-        System.out.println(a.display());
-        System.out.println(a.isSolvable());
-        System.out.println(a.solve().get(0));
+        LinearEquation a = new LinearEquation(args[0]);
+        a.displaySolution();
     }
 }

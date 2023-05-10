@@ -1,15 +1,22 @@
-import java.util.*;
+import expression.*;
 
 public abstract class Equation {
-    private Stack<String> representation;
+    private Expression leftHandSide;
+    private Expression rightHandSide;
 
     public Equation(String eq) {
-        representation = parseImp(eq);
+        String[] eqSplitted = eq.split("=");
+        leftHandSide = (new ExpressionConstructor(eqSplitted[0])).evaluate();
+        rightHandSide = (new ExpressionConstructor(eqSplitted[1])).evaluate();
     }
 
-    protected abstract Stack<String> parseImp(String equation);
+    protected Expression getLeftHandSide(){
+        return leftHandSide;
+    }
 
-    public abstract String display();
-    public abstract boolean isSolvable();
-    public abstract ArrayList<Double> solve();
+    protected Expression getRightHandSide(){
+        return rightHandSide;
+    }
+
+    public abstract void displaySolution();
 }
