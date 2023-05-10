@@ -29,7 +29,7 @@ public final class Parser {
                     stack.pop();
                     break;
                 case OPERATOR:
-                    while (stack.peek().getType() == TokenType.OPERATOR && !stack.empty()) {
+                    while (!stack.empty() && stack.peek().getType() == TokenType.OPERATOR) {
                         OperatorToken o1 = (OperatorToken) token;
                         OperatorToken o2 = (OperatorToken) stack.peek();
                         int o1Importance = o1.getOperator().getImportance();
