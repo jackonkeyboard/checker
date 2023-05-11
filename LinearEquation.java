@@ -1,7 +1,8 @@
 import expression.*;
+import exceptions.*;
 
 public class LinearEquation extends Equation {
-    public LinearEquation(String eq) {
+    public LinearEquation(String eq) throws EquationParseException, ParenthesesCountError, UnknownTokenException {
         super(eq);
     }
 
@@ -36,8 +37,19 @@ public class LinearEquation extends Equation {
     }
 
     public static void main(String[] args) {
-        LinearEquation a = new LinearEquation(args[0]);
-        Solution s = a.solve();
-        s.print();
+        try{
+            LinearEquation a = new LinearEquation(args[0]);
+            Solution s = a.solve();
+            s.print();
+        }catch(EquationParseException e){
+            System.out.println(e.getMessage());
+            System.out.println("Please be carefull with the equation sign");
+        }catch(ParenthesesCountError e){
+            System.out.println(e.getMessage());
+            System.out.println("Please be carefull with parentheses, Make sure for every opening parentheses there is a closing one");
+        }catch(UnknownTokenException e){
+            System.out.println(e.getMessage());
+            System.out.println("Please be carefull with the input's characters, make sure to only insert characters that the program understands");
+        }
     }
 }

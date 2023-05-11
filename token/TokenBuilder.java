@@ -1,4 +1,5 @@
 package token;
+import exceptions.*;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ public final class TokenBuilder {
         return this.expression.length > index;
     }
 
-    public Token nextToken() {
+    public Token nextToken() throws UnknownTokenException {
         char ch = expression[index];
         while (Character.isWhitespace(ch)) {
             index++;
@@ -43,7 +44,7 @@ public final class TokenBuilder {
             return parseVariableToken(ch);
 
         }
-        throw new IllegalArgumentException("Char '" + ch + "' is not possible to parse");
+        throw new UnknownTokenException("Char '" + ch + "' is not possible to parse");
     }
 
     private boolean isImplicitMultNeeded() {
@@ -98,7 +99,7 @@ public final class TokenBuilder {
         return prevToken;
     }
 
-    public ArrayList<Token> getTokens() {
+    public ArrayList<Token> getTokens() throws UnknownTokenException {
         ArrayList<Token> tokens = new ArrayList<Token>();
         while (hasNext()) {
             tokens.add(nextToken());

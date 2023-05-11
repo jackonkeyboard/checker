@@ -2,6 +2,7 @@ package expression;
 import arithmeticParsing.*;
 import token.*;
 import operator.*;
+import exceptions.*;
 import token.Token.TokenType;
 
 import java.util.*;
@@ -9,7 +10,7 @@ import java.util.*;
 public final class ExpressionConstructor {
     private Token[] tokens;
 
-    public ExpressionConstructor(String expression) {
+    public ExpressionConstructor(String expression) throws ParenthesesCountError, UnknownTokenException {
         Token[] tokens = Parser.convert(expression);
         this.tokens = tokens;
     }

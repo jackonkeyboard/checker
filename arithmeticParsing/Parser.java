@@ -1,13 +1,14 @@
 package arithmeticParsing;
 
 import token.*;
+import exceptions.*;
 import token.Token.TokenType;
 
 import java.util.*;
 
 //Implementation of Shunting Yard Algorithm of Dijkstra
 public final class Parser {
-    public static Token[] convert(String expression) {
+    public static Token[] convert(String expression) throws ParenthesesCountError, UnknownTokenException{
         Stack<Token> stack = new Stack<>();
         List<Token> output = new ArrayList<>();
 
@@ -48,13 +49,13 @@ public final class Parser {
                     stack.push(token);
                     break;
                 default:
-                    throw new IllegalArgumentException("Token is not known.");
+                    throw new UnknownTokenException("Token" + token.toString() + "is not known.");
             }
         }
         while (!stack.empty()) {
             Token token = stack.pop();
             if (token.getType() == TokenType.PARENTHESES_CLOSE || token.getType() == TokenType.PARENTHESES_OPEN) {
-                throw new IllegalArgumentException("Parantheses count error");
+                throw new ParenthesesCountError();
             } else {
                 output.add(token);
             }

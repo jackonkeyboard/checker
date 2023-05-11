@@ -1,4 +1,5 @@
 import expression.*;
+import exceptions.*;
 
 public abstract class Equation {
     protected class Solution {
@@ -46,17 +47,26 @@ public abstract class Equation {
     private Expression leftHandSide;
     private Expression rightHandSide;
 
-    public Equation(String eq) {
+    public Equation(String eq) throws EquationParseException, ParenthesesCountError, UnknownTokenException {
         String[] eqSplitted = eq.split("=");
+        validate(eqSplitted);
+
         leftHandSide = (new ExpressionConstructor(eqSplitted[0])).evaluate();
         rightHandSide = (new ExpressionConstructor(eqSplitted[1])).evaluate();
     }
 
-    protected Expression getLeftHandSide(){
+    private void validate(String[] eqSplitted) throws EquationParseException  {
+        if (eqSplitted.length < 2)
+            throw new EquationParseException("Could not find a = sign in the equation");
+        if (eqSplitted.length > 2)
+            throw new EquationParseException("Found more than one = sign in the equation");
+    }
+
+    protected Expression getLeftHandSide() {
         return leftHandSide;
     }
 
-    protected Expression getRightHandSide(){
+    protected Expression getRightHandSide() {
         return rightHandSide;
     }
 
