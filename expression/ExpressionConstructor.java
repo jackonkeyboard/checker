@@ -16,24 +16,26 @@ public final class ExpressionConstructor {
 
     public Expression evaluate() {
         Stack<Expression> output = new Stack<Expression>();
-        for (Token t : tokens) {
-            if (t.getType() == TokenType.CONSTANT) {
-                output.push(((ConstantToken) t).getValue());
-            } else if (t.getType() == TokenType.VARIABLE) {
-                output.push(((VariableToken) t).getValue());
-            } else if (t.getType() == TokenType.OPERATOR) {
-                OperatorToken opToken = (OperatorToken) t;
+        for (Token token : tokens) {
+            if (token.getType() == TokenType.CONSTANT) {
+                output.push(((ConstantToken) token).getValue());
+            } else if (token.getType() == TokenType.VARIABLE) {
+                output.push(((VariableToken) token).getValue());
+            } else if (token.getType() == TokenType.OPERATOR) {
+                OperatorToken opToken = (OperatorToken) token;
                 Operator operator = opToken.getOperator();
                 if (output.size() < operator.getOperandsCount()) {
                     throw new IllegalArgumentException("Not enough operands are provided for the '" + operator.getOperator() + "' operator.");
                 }
-                if (operator.getOperandsCount() == 2) {
+                //ideally if we supported operators requiring more than 2 operands
+                //we would want to pop last n items from the output stack instead of this hardcoded logic
+                if (operator.getOperandsCount() == 1) {
+                    Expression arg = output.pop();
+                    output.push(operator.eval(arg));
+                } else if (operator.getOperandsCount() == 2) {
                     Expression rightArg = output.pop();
                     Expression leftArg = output.pop();
                     output.push(operator.eval(leftArg, rightArg));
-                } else if (operator.getOperandsCount() == 1) {
-                    Expression arg = output.pop();
-                    output.push(operator.eval(arg));
                 }
             } 
         }
