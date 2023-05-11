@@ -56,4 +56,8 @@ public class ConstantExpression extends Expression {
         }
         return null;
     }
+
+    public Expression negate(){
+        return new ConstantExpression(-value);
+    }
 }

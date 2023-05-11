@@ -71,4 +71,8 @@ public class FirstOrderExpression extends Expression {
         }
         return null;
     }
+
+    public Expression negate(){
+        return new FirstOrderExpression(-coefficient1, -coefficient2);
+    }
 }
