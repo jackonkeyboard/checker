@@ -42,9 +42,4 @@ public final class ExpressionConstructor {
         }
         return output.pop();
     }
-
-    public static void main(String[] args) {
-        Expression e = (new ExpressionConstructor("2(2x+1)+4x(5+1)+9x+(2+2)(x+2x)+9")).evaluate();
-        System.out.println(e.toString());
-    }
 }

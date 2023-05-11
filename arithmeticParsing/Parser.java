@@ -32,12 +32,14 @@ public final class Parser {
                     while (!stack.empty() && stack.peek().getType() == TokenType.OPERATOR) {
                         OperatorToken o1 = (OperatorToken) token;
                         OperatorToken o2 = (OperatorToken) stack.peek();
-                        int o1Importance = o1.getOperator().getImportance();
-                        int o2Importance = o2.getOperator().getImportance();
-                        if (o1.getOperator().getOperandsCount() == 1 && o2.getOperator().getOperandsCount() == 2) {
+                        int o1Imp = o1.getOperator().getImportance();
+                        int o2Imp = o2.getOperator().getImportance();
+                        int o1Operands = o1.getOperator().getOperandsCount();
+                        int o2Operands = o2.getOperator().getOperandsCount();
+                        boolean isLeftAssociative = o1.getOperator().isLeftAssociative();
+                        if (o1Operands == 1 && o2Operands == 2) {
                             break;
-                        } else if ((o1.getOperator().isLeftAssociative() && o1Importance <= o2Importance)
-                                || (o1Importance < o2Importance)) {
+                        } else if ((o1Imp < o2Imp) || (o1Imp == o2Imp && isLeftAssociative)) {
                             output.add(stack.pop());
                         } else {
                             break;

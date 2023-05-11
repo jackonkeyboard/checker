@@ -6,7 +6,7 @@ import expression.*;
 //let's just implement it for the sake of implementing ))
 public class NegatorOperator extends Operator{
     private static final int operandsCount = 1;
-    private static final int importance = 4;
+    private static final int importance = 5;
     private static final String symbol = "-";
     private static final boolean isLeftAssociative = false;
 
